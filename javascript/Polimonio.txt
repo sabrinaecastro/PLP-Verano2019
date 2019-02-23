@@ -1,7 +1,4 @@
 
-/*Ejercicio 1, 2, 3 y 4*/
-
-
 function Monomio (c,g) {
         this.c = c;
         this.g = g;
@@ -27,47 +24,83 @@ Sumatoria.prototype.gradoDesde = function (n) 	{ if ( this.coefDeGrado(n)!=0 || 
 							return this.gradoDesde(n-1);
 						  }
 };
-Sumatoria.prototype.toString = function () {return (this.toStringDesde(this.gradoMayor()));};
-Sumatoria.prototype.toStringDesde = function (n) { 
+Sumatoria.prototype.toString = function () {return ( this.toStringDesde(this.grado(),this.grado()));};
+Sumatoria.prototype.toStringDesde = function (n, mayorGrado) {
 				if (n==0 && this.coefDeGrado(n)!=0){
-					if (this.coefDeGrado(n)<0) {
-						return (" - " + (this.coefDeGrado(n)*(-1)));
-					}
-					else {
-						return (" + " + this.coefDeGrado(n));
-					}							
+              		return this.terminoIndependiente(mayorGrado);
 				}
-				if (n==1){
-					if (this.coefDeGrado(n)<0) {
-						return (" - " + (this.coefDeGrado(n)*(-1))+"x"  +  this.toStringDesde(n-1) );
-					}
-					else if (this.coefDeGrado(n)==1) {
-						return (" + " +"x" +  this.toStringDesde(n-1) );
-					}
-					else if (this.coefDeGrado(n)>1) {
-						return (" + " + this.coefDeGrado(n)+"x" +  this.toStringDesde(n-1) );
-					}
-					else{
-						return (this.toStringDesde(n-1));
-					}							
+				else if (n==1){
+                  	return this.terminoGradoUno(mayorGrado);
 				}
-				if (n>=2){
-					if (this.coefDeGrado(n)<0) {
-						return (" - " + (this.coefDeGrado(n)*(-1))+"x"+n.toString().sup() +  this.toStringDesde(n-1) );
-					}
-					else if (this.coefDeGrado(n)==1) {
-						return (" + " + "x"+n.toString().sup()+  this.toStringDesde(n-1) );
-					}
-					else if (this.coefDeGrado(n)>1) {
-						return (" + " + this.coefDeGrado(n)+"x"+n.toString().sup()+  this.toStringDesde(n-1) );
-					}
-					else{
-						return (this.toStringDesde(n-1));
-					}							
+				else if (n>=2){
+                  	return this.terminoGradoMasDos(n,mayorGrado);
 				}
 				else {
 					return ("");
 				}
+};
+Sumatoria.prototype.terminoIndependiente = function (mayorGrado){
+    if (this.coefDeGrado(0)<0 && 0==mayorGrado) {
+      return this.coefDeGrado(0);
+    }
+    else if (this.coefDeGrado(0)<0 ) {
+      return (" - " + (this.coefDeGrado(0)*(-1)));
+    }
+    else if (this.coefDeGrado(0)>0 && 0==mayorGrado) {
+      return (this.coefDeGrado(0));
+    }
+    else if (this.coefDeGrado(0)>0){
+      return (" + " + this.coefDeGrado(0));
+    }
+  	else{
+      return "";
+    }
+};
+Sumatoria.prototype.terminoGradoUno = function (mayorGrado){
+    if (this.coefDeGrado(1)<0 && mayorGrado==1) {
+		return ((this.coefDeGrado(1)*(-1))+"x"  +  this.toStringDesde(0,mayorGrado) );
+    }
+    else if (this.coefDeGrado(1)<0) {
+		return (" - " + (this.coefDeGrado(1)*(-1))+"x"  +  this.toStringDesde(0,mayorGrado) );
+    }
+    else if (this.coefDeGrado(1)==1 && mayorGrado==1) {
+      return ("x" +  this.toStringDesde(0, mayorGrado) );
+    }
+    else if (this.coefDeGrado(1)==1) {
+      return (" + " +"x" +  this.toStringDesde(0,mayorGrado) );
+    }
+    else if (this.coefDeGrado(1)>1 && mayorGrado==1) {
+      return ( this.coefDeGrado(1)+"x" +  this.toStringDesde(0,mayorGrado) );
+    }
+    else if (this.coefDeGrado(1)>1) {
+      return (" + " + this.coefDeGrado(1)+"x" +  this.toStringDesde(0,mayorGrado) );
+    }
+    else{
+      return (this.toStringDesde(0,mayorGrado));
+    }			
+};
+Sumatoria.prototype.terminoGradoMasDos = function (n,mayorGrado){
+  if (this.coefDeGrado(n)<0 && n==mayorGrado) {
+    return ((this.coefDeGrado(n)*(-1))+"x"+n.toString().sup() +  this.toStringDesde(n-1,mayorGrado) );
+  }
+  else if (this.coefDeGrado(n)<0) {
+    return (" - " + (this.coefDeGrado(n)*(-1))+"x"+n.toString().sup() +  this.toStringDesde(n-1,mayorGrado) );
+  }
+  else if (this.coefDeGrado(n)==1 && n==mayorGrado) {
+    return ("x"+n.toString().sup()+  this.toStringDesde(n-1,mayorGrado) );
+  }
+  else if (this.coefDeGrado(n)==1) {
+    return (" + " + "x"+n.toString().sup()+  this.toStringDesde(n-1,mayorGrado) );
+  }
+  else if (this.coefDeGrado(n)>1 && n==mayorGrado) {
+    return ( this.coefDeGrado(n)+"x"+n.toString().sup()+  this.toStringDesde(n-1,mayorGrado) );
+  }
+  else if (this.coefDeGrado(n)>1) {
+    return (" + " + this.coefDeGrado(n)+"x"+n.toString().sup()+  this.toStringDesde(n-1,mayorGrado) );
+  }
+  else{
+    return (this.toStringDesde(n-1,mayorGrado));
+  }							
 };
 Sumatoria.prototype.aPolinomio = function () {
 	return (this.aPolinomioDesde(this.grado()));
@@ -98,6 +131,7 @@ let st3 = new Sumatoria(m6,m7);
 let s2 = new Sumatoria(m5,st3);
 
 /* Ejercicio 3*/
+
 
 
 
